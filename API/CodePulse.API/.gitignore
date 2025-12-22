@@ -1,0 +1,93 @@
+# Visual Studio / .NET
+.vs/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.DotSettings.user
+*.ide.*
+
+# Build results
+[Bb]in/
+[Oo]bj/
+out/
+artifacts/
+
+# Rider
+.idea/
+*.sln.iml
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# EF Core Migrations (if you store migration SQL files temporarily)
+# *.sql
+
+# User secrets and local app settings
+secrets.json
+appsettings.*.json
+appsettings.*.Local.json
+local.settings.json
+.env
+
+# Logs
+*.log
+logs/
+
+# Node / front-end
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+pnpm-lock.yaml
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Compiled binaries
+*.dll
+*.exe
+*.so
+*.dylib
+*.pdb
+
+# Rider / JetBrains
+*.idea/
+*.iml
+out/
+
+# Misc
+*.DS_Store
+*.class
+*.war
+*.ear
+
+# Coverage results
+coverage/
+*.coverage
+*.coveragexml
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# JetBrains Rider caches
+.idea/
+.idea/*-shelf/
+
+# End of file
