@@ -25,7 +25,8 @@ export class AddCategory {
   private categoryService = inject(CategoryService)
   //1. Import ReactiveFormsModule
   //2. FormGroups -> FormControls
-
+//addCategoryFormGroup is variable that holds the entire Form Model
+//' ' it's blank cause we're not providing any default value
   addCategoryFormGroup = new FormGroup({
     name : new FormControl<string>('', {
       nonNullable: true,
@@ -36,7 +37,8 @@ export class AddCategory {
       validators: [Validators.required, Validators.maxLength(100)],
     }),
   });
-
+ // nameFormControl & urlHandleFormControl are created so that we can directly 
+  //use it inside the  HTML file with  directive
   get nameFormControl(){
     return this.addCategoryFormGroup.controls.name;
   }
