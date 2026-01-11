@@ -2,6 +2,7 @@ import { Component, effect, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AddCategoryRequest } from '../models/category.model';
 import { CategoryService } from '../services/category-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-category',
@@ -10,11 +11,13 @@ import { CategoryService } from '../services/category-service';
   styleUrl: './add-category.css',
 })
 export class AddCategory {
+  private router = inject(Router)
   constructor(){
     effect(()=>{
       if(this.categoryService.addCategoryStatus() === 'success'){
-        console.log('Success');
         //Redirect back to category list page
+        this.categoryService.addCategoryStatus.set('idle');
+        this.router.navigate(['/admin/categories']);
       }
       if(this.categoryService.addCategoryStatus() === 'error'){
         console.log('Add category Request Failed');
@@ -27,7 +30,7 @@ export class AddCategory {
   //2. FormGroups -> FormControls
 //addCategoryFormGroup is variable that holds the entire Form Model
 //' ' it's blank cause we're not providing any default value
-  addCategoryFormGroup = new FormGroup({
+addCategoryFormGroup = new FormGroup({
     name : new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(100)],
@@ -37,7 +40,7 @@ export class AddCategory {
       validators: [Validators.required, Validators.maxLength(100)],
     }),
   });
- // nameFormControl & urlHandleFormControl are created so that we can directly 
+// nameFormControl & urlHandleFormControl are created so that we can directly 
   //use it inside the  HTML file with  directive
   get nameFormControl(){
     return this.addCategoryFormGroup.controls.name;
