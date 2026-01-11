@@ -46,5 +46,21 @@ namespace CodePulse.API.Controllers
             return Ok(response);
         }
 
+        //Get: api/categories
+        [HttpGet]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            var categories = await categoryRepository.GetAllCategoriesAsync();
+            // Map domain models to DTOs
+            //The Select() LINQ method loops through each category and transforms it. we don't need an explicit foreach loop.
+            var categoriesDto = categories.Select(category => new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                UrlHandle = category.UrlHandle
+            }).ToList();
+
+            return Ok(categoriesDto);
+        }
     }
 }
