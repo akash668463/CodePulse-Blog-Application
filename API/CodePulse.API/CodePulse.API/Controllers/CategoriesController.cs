@@ -20,7 +20,7 @@ namespace CodePulse.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory(CreateCategoryRequestDto requestDto)
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDto requestDto)
         {
             // Map the incoming request DTO to the domain model.
             // The domain model represents how data is stored in the database.
@@ -46,21 +46,39 @@ namespace CodePulse.API.Controllers
             return Ok(response);
         }
 
-        //Get: api/categories
+        //Get: https://localhost:7213/api/categories
         [HttpGet]
         public async Task<IActionResult> GetAllCategories()
         {
             var categories = await categoryRepository.GetAllCategoriesAsync();
             // Map domain models to DTOs
             //The Select() LINQ method loops through each category and transforms it. we don't need an explicit foreach loop.
-            var categoriesDto = categories.Select(category => new CategoryDto
+            var response = categories.Select(category => new CategoryDto
             {
                 Id = category.Id,
                 Name = category.Name,
                 UrlHandle = category.UrlHandle
             }).ToList();
 
-            return Ok(categoriesDto);
+            return Ok(response);
+        }
+
+        //https://localhost:7213/api/categories/{id}
+        [HttpGet("{id:Guid}")]
+        public async Task<IActionResult> GetCategoryById([FromRoute] Guid id)
+        {
+            var category = await categoryRepository.GetCategoryByIdAsync(id);
+            if (category == null)
+            {
+                return NotFound(); // Return 404 if the category is not found
+            }
+            var response = new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                UrlHandle = category.UrlHandle
+            };
+            return Ok(response);
         }
     }
 }
