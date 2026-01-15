@@ -98,7 +98,7 @@ namespace CodePulse.API.Controllers
             if (category == null)
             {
                 return NotFound(); // Return 404 if the category to update is not found
-            }   
+            }
 
             var response = new CategoryDto
             {
@@ -108,6 +108,19 @@ namespace CodePulse.API.Controllers
             };
 
             return Ok(response);
+        }
+
+        //DELETE : https://localhost:7213/api/categories/{id}
+        [HttpDelete("{id:Guid}")]
+        public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
+        {
+            var category = await categoryRepository.GetCategoryByIdAsync(id);
+            if (category == null)
+            {
+                return NotFound(); // Return 404 if the category to delete is not found
+            }
+            await categoryRepository.DeleteCategoryAsync(id);
+            return NoContent(); // Return 204 No Content to indicate successful deletion
         }
     }
 }
