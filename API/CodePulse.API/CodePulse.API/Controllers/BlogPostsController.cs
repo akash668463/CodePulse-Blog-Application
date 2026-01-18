@@ -49,5 +49,28 @@ namespace CodePulse.API.Controllers
             };
             return Ok(response);
         }
+
+        //Get : {apibaseurl}/api/BlogPosts
+        [HttpGet]
+        public async Task<IActionResult> GetAllBlogPosts()
+        {
+            var blogPosts = await blogPostRepository.GetAllAsync();
+
+            //convert Domain model to DTO
+            var response = blogPosts.Select(blogPost => new BlogPostDto
+            {
+                Id = blogPost.Id,
+                Title = blogPost.Title,
+                Content = blogPost.Content,
+                Author = blogPost.Author,
+                FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                IsVisible = blogPost.IsVisible,
+                PublishedDate = blogPost.PublishedDate,
+                shortDescription = blogPost.shortDescription,
+                UrlHandle = blogPost.UrlHandle
+            }).ToList();
+
+            return Ok(response);
+        }
     }
 }
