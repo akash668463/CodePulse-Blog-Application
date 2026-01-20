@@ -11,9 +11,13 @@ namespace CodePulse.API.Controllers
     public class BlogPostsController : ControllerBase
     {
         private readonly IBlogPostRepository blogPostRepository;
-        public BlogPostsController(IBlogPostRepository blogPostRepository)
+        private readonly ICategoryRepository categoryRepository;
+
+        public BlogPostsController(IBlogPostRepository blogPostRepository, 
+            ICategoryRepository categoryRepository)
         {
             this.blogPostRepository = blogPostRepository;
+            this.categoryRepository = categoryRepository;
         }
         //POST: {apibaseurl}/api/BlogPosts
         [HttpPost]
@@ -29,8 +33,19 @@ namespace CodePulse.API.Controllers
                 UrlHandle = requestDto.UrlHandle,
                 PublishedDate = requestDto.PublishedDate,
                 Author = requestDto.Author,
-                IsVisible = requestDto.IsVisible
+                IsVisible = requestDto.IsVisible,
+                Categories = new List<Category>()
             };
+
+            foreach(var categoryGuid in requestDto.Categories)
+            {
+               var existingCategory = await categoryRepository.GetCategoryByIdAsync(categoryGuid);
+                if(existingCategory != null)
+                {
+                      blogPost.Categories.Add(existingCategory);
+                }
+            }
+
             blogPost = await blogPostRepository.CreateAsync(blogPost);
 
             // Convert Domain Model back to DTO
@@ -45,7 +60,13 @@ namespace CodePulse.API.Controllers
                 IsVisible = blogPost.IsVisible,
                 PublishedDate = blogPost.PublishedDate,
                 shortDescription = blogPost.shortDescription,
-                UrlHandle = blogPost.UrlHandle
+                UrlHandle = blogPost.UrlHandle,
+                Categories = blogPost.Categories.Select(category => new CategoryDto
+                {
+                    Id = category.Id,
+                    Name =  category.Name,
+                    UrlHandle = category.UrlHandle
+                }).ToList()
             };
             return Ok(response);
         }

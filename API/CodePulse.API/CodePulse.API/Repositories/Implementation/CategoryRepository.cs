@@ -37,7 +37,7 @@ namespace CodePulse.API.Repositories.Implementation
                 dbContext.Entry(existingCategory).CurrentValues.SetValues(category);
                 await dbContext.SaveChangesAsync();
                 return category;
-            }
+            } 
             return null;
         }
 
