@@ -1,9 +1,35 @@
 <div class="container">
-
-    <h1 class="mt-3">Blog Post List</h1>
-    <div class="d-flex justify-content-end mt-3">
-        <a class="btn btn-primary" [routerLink]="['/admin/blogposts/add']">
-            Add Blog Post
-        </a>
-    </div>
+  <h1 class="mt-3">Blog Post List</h1>
+  <div class="d-flex justify-content-end mt-3">
+    <a class="btn btn-primary" [routerLink]="['/admin/blogposts/add']"> Add Blog Post </a>
+  </div>
+  <h2>HTTP Status Code {{statusCode()}}</h2>
+  <div class="mt-3">
+    @if (isLoading()) {
+      <p>Loading...</p>
+    } @else {
+      @if (error()) {
+        <p>There has been as error...</p>
+      } @else {
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Short Description</th>
+              <th>Is Visible</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (blogPost of response(); track blogPost.id) {
+              <tr>
+                <td>{{ blogPost.title }}</td>
+                <td>{{ blogPost.shortDescription }}</td>
+                <td>{{ blogPost.isVisible }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    }
+  </div>
 </div>
