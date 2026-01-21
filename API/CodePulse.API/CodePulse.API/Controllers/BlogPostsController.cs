@@ -88,7 +88,13 @@ namespace CodePulse.API.Controllers
                 IsVisible = blogPost.IsVisible,
                 PublishedDate = blogPost.PublishedDate,
                 shortDescription = blogPost.shortDescription,
-                UrlHandle = blogPost.UrlHandle
+                UrlHandle = blogPost.UrlHandle,
+                Categories = blogPost.Categories.Select(category => new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    UrlHandle = category.UrlHandle
+                }).ToList()
             }).ToList();
 
             return Ok(response);
