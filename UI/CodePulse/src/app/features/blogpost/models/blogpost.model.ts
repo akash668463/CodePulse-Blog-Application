@@ -1,3 +1,5 @@
+import { Category } from "../../category/models/category.model";
+
 export interface AddBlogPostRequest{
     title : string,
     shortDescription : string,
@@ -18,4 +20,5 @@ export interface BlogPost{
     author : string,
     publishedDate : Date,
     isVisible : boolean,
+    categories : Category[]
 }

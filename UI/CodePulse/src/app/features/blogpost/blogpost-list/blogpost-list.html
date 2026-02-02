@@ -17,14 +17,20 @@
               <th>Title</th>
               <th>Short Description</th>
               <th>Is Visible</th>
+              <th>Categories</th>
             </tr>
           </thead>
           <tbody>
             @for (blogPost of response(); track blogPost.id) {
               <tr>
                 <td>{{ blogPost.title }}</td>
-                <td>{{ blogPost.shortDescription }}</td>
+                <td>{{ blogPost.shortDescription }}</td> 
                 <td>{{ blogPost.isVisible }}</td>
+                <td>
+                  @for (category of blogPost.categories; track category.id) {
+                    <span class="badge text-bg-secondary">{{category.name}}</span>
+                  }
+                </td>
               </tr>
             }
           </tbody>
