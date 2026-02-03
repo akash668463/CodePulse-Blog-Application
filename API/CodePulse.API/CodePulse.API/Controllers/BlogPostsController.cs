@@ -131,5 +131,61 @@ namespace CodePulse.API.Controllers
             };
             return Ok(response);
         }
+
+        //PUT : {apibaseurl}/api/BlogPosts/{id
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> UpdateBlogPostById([FromRoute] Guid id, UpdateBlogPostRequestDto requestDto)
+        {
+           //Convert DTO to Domain Model
+            var blogPost = new BlogPost
+            {
+                Id = id,
+                Title = requestDto.Title,
+                shortDescription = requestDto.shortDescription,
+                Content = requestDto.Content,
+                FeaturedImageUrl = requestDto.FeaturedImageUrl,
+                UrlHandle = requestDto.UrlHandle,
+                PublishedDate = requestDto.PublishedDate,
+                Author = requestDto.Author,
+                IsVisible = requestDto.IsVisible,
+                Categories = new List<Category>()
+            };
+            foreach (var categoryGuid in requestDto.Categories)
+            {
+                var existingCategory = await categoryRepository.GetCategoryByIdAsync(categoryGuid);
+                if (existingCategory != null)
+                {
+                    blogPost.Categories.Add(existingCategory);
+                }
+            }
+            //call repository to update blogpost domain model
+            var updatedBlogPost = await blogPostRepository.UpdateAsync(id, blogPost);
+            if (updatedBlogPost == null)
+            {
+                return NotFound();
+            }
+            //Convert Domain Model back to DTO
+            var response = new BlogPostDto
+            {
+                Id = blogPost.Id,
+                Title = blogPost.Title,
+                Content = blogPost.Content,
+                Author = blogPost.Author,
+                FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                IsVisible = blogPost.IsVisible,
+                PublishedDate = blogPost.PublishedDate,
+                shortDescription = blogPost.shortDescription,
+                UrlHandle = blogPost.UrlHandle,
+                Categories = blogPost.Categories.Select(category => new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    UrlHandle = category.UrlHandle
+                }).ToList()
+            };
+            return Ok(response);
+        }
+
     }
 }
