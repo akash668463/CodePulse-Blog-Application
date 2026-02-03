@@ -13,7 +13,7 @@ namespace CodePulse.API.Controllers
         private readonly IBlogPostRepository blogPostRepository;
         private readonly ICategoryRepository categoryRepository;
 
-        public BlogPostsController(IBlogPostRepository blogPostRepository, 
+        public BlogPostsController(IBlogPostRepository blogPostRepository,
             ICategoryRepository categoryRepository)
         {
             this.blogPostRepository = blogPostRepository;
@@ -37,12 +37,12 @@ namespace CodePulse.API.Controllers
                 Categories = new List<Category>()
             };
 
-            foreach(var categoryGuid in requestDto.Categories)
+            foreach (var categoryGuid in requestDto.Categories)
             {
-               var existingCategory = await categoryRepository.GetCategoryByIdAsync(categoryGuid);
-                if(existingCategory != null)
+                var existingCategory = await categoryRepository.GetCategoryByIdAsync(categoryGuid);
+                if (existingCategory != null)
                 {
-                      blogPost.Categories.Add(existingCategory);
+                    blogPost.Categories.Add(existingCategory);
                 }
             }
 
@@ -64,7 +64,7 @@ namespace CodePulse.API.Controllers
                 Categories = blogPost.Categories.Select(category => new CategoryDto
                 {
                     Id = category.Id,
-                    Name =  category.Name,
+                    Name = category.Name,
                     UrlHandle = category.UrlHandle
                 }).ToList()
             };
@@ -97,6 +97,38 @@ namespace CodePulse.API.Controllers
                 }).ToList()
             }).ToList();
 
+            return Ok(response);
+        }
+
+        //GET : {apibaseurl}/api/BlogPosts/{id}
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetBlogPostById([FromRoute] Guid id)
+        {
+            var blogPost = await blogPostRepository.GetByIdAsync(id);
+            if (blogPost == null)
+            {
+                return NotFound();
+            }
+            //convert Domain model to DTO
+            var response = new BlogPostDto
+            {
+                Id = blogPost.Id,
+                Title = blogPost.Title,
+                Content = blogPost.Content,
+                Author = blogPost.Author,
+                FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                IsVisible = blogPost.IsVisible,
+                PublishedDate = blogPost.PublishedDate,
+                shortDescription = blogPost.shortDescription,
+                UrlHandle = blogPost.UrlHandle,
+                Categories = blogPost.Categories.Select(category => new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    UrlHandle = category.UrlHandle
+                }).ToList()
+            };
             return Ok(response);
         }
     }
