@@ -39,7 +39,7 @@ export class AddBlogpost {
     }),
     urlHandle : new FormControl<string>('', {
       nonNullable : true,
-      validators : [Validators.required, Validators.maxLength(10)]
+      validators : [Validators.required, Validators.maxLength(100)]
     }),
     publishedDate : new FormControl<string>(new Date().toISOString().split('T')[0], {
       nonNullable : true,
