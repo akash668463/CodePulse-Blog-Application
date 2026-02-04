@@ -77,34 +77,49 @@ export class EditBlogpost {
     }
   });
 
-  onSubmit(){
-  const id = this.id();
-  if (id && this.editBlogPostForm.valid) {
-    const formValue = this.editBlogPostForm.getRawValue();
+  onSubmit() {
+    const id = this.id();
+    if (id && this.editBlogPostForm.valid) {
+      const formValue = this.editBlogPostForm.getRawValue();
 
-    const updateBlogPostRequestDto: UpdateBlogPostRequest = {
-      title: formValue.title,
-      shortDescription: formValue.shortDescription,
-      content: formValue.content,
-      author: formValue.author,
-      featuredImageUrl: formValue.featuredImageUrl,
-      isVisible: formValue.isVisible,
-      publishedDate: new Date(formValue.publishedDate),
-      urlHandle: formValue.urlHandle,
-      categories: formValue.categories ?? [],
-    };
+      const updateBlogPostRequestDto: UpdateBlogPostRequest = {
+        title: formValue.title,
+        shortDescription: formValue.shortDescription,
+        content: formValue.content,
+        author: formValue.author,
+        featuredImageUrl: formValue.featuredImageUrl,
+        isVisible: formValue.isVisible,
+        publishedDate: new Date(formValue.publishedDate),
+        urlHandle: formValue.urlHandle,
+        categories: formValue.categories ?? [],
+      };
 
-    this.blogPostService.editBlogPost(id, updateBlogPostRequestDto)
-      .subscribe({
-        next: (response) => {
-          this.router.navigate(['/admin/blogposts']);
-        },
-        error: () => {
-          console.error('Something went wrong!');
-        }
-      });
-    
+      this.blogPostService.editBlogPost(id, updateBlogPostRequestDto)
+        .subscribe({
+          next: (response) => {
+            this.router.navigate(['/admin/blogposts']);
+          },
+          error: () => {
+            console.error('Something went wrong!');
+          }
+        });
+
+    }
   }
-}
+
+  onDelete(){
+      const id = this.id();
+      if(id){
+        this.blogPostService.deleteBlogPost(id).subscribe({
+          next : (response) => {
+            console.log(response);
+            this.router.navigate(['/admin/blogposts']);
+          },
+          error : () => {
+            console.error('Something went wrong');
+          }
+        })
+      }
+  }
 }
 
