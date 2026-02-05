@@ -47,12 +47,13 @@ namespace CodePulse.API.Data
                 Id = adminUserId,
                 UserName = "admin@codepulse.com",
                 Email = "admin@codepulse.com",
-                NormalizedEmail = "admin@codepulse.com".ToUpper(),
-                NormalizedUserName = "admin@codepulse.com".ToUpper()
+                NormalizedEmail = "ADMIN@CODEPULSE.COM",
+                NormalizedUserName = "ADMIN@CODEPULSE.COM",
+                PasswordHash = "AQAAAAIAAYagAAAAECewGVMuyjdb4VTjkAcFiLZ5eQIFJeiQ3e6mvCtMnYdEfEJsnNVLFCGIDetcXh3QFg==",
+                SecurityStamp = adminUserId,
+                ConcurrencyStamp = adminUserId
             };
-            //Set user password
-            var passwordHasher = new PasswordHasher<IdentityUser>();
-            admin.PasswordHash = passwordHasher.HashPassword(admin, "Admin@123");
+
             builder.Entity<IdentityUser>().HasData(admin);
 
             //Assign admin user to Writer role
