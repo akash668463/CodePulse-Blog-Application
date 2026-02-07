@@ -5,8 +5,13 @@ import { EditCategory } from './features/category/edit-category/edit-category';
 import { BlogpostList } from './features/blogpost/blogpost-list/blogpost-list';
 import { AddBlogpost } from './features/blogpost/add-blogpost/add-blogpost';
 import { EditBlogpost } from './features/blogpost/edit-blogpost/edit-blogpost';
+import { Login } from './features/Auth/login/login';
 
 export const routes: Routes = [
+    {
+        path: 'login',
+        component: Login
+    },
     {
         path : 'admin/categories',
         component : CategoryList
