@@ -1,4 +1,5 @@
 ﻿using CodePulse.API.Models.DTO;
+using CodePulse.API.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,11 @@ namespace CodePulse.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
-        public AuthController(UserManager<IdentityUser> userManager)
+        private readonly ITokenRepository tokenRepository;
+        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository)
         {
             this.userManager = userManager;
+            this.tokenRepository = tokenRepository;
         }
 
         //POST: {apibaseurl}/api/auth/register
@@ -29,11 +32,11 @@ namespace CodePulse.API.Controllers
 
             //create user
             var identityResult = await userManager.CreateAsync(user, requestDto.Password);
-            
-            if(identityResult.Succeeded)
+
+            if (identityResult.Succeeded)
             {
-               //Add Role to user(Reader)
-               identityResult = await userManager.AddToRoleAsync(user, "Reader");
+                //Add Role to user(Reader)
+                identityResult = await userManager.AddToRoleAsync(user, "Reader");
                 if (identityResult.Succeeded)
                 {
                     return Ok();
@@ -53,13 +56,46 @@ namespace CodePulse.API.Controllers
             {
                 if (identityResult.Errors.Any())
                 {
-                    foreach(var error in identityResult.Errors)
+                    foreach (var error in identityResult.Errors)
                     {
                         ModelState.AddModelError(error.Code, error.Description);
                     }
                 }
             }
 
+            return ValidationProblem(ModelState);
+        }
+
+        //POST: {apibaseurl}/api/auth/login
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto requestDto)
+        {
+           //Check Email
+           var identityUser = await userManager.FindByEmailAsync(requestDto.Email?.Trim());
+            if(identityUser is not null)
+            {
+                //Check Password
+                var checkPasswordResult = await userManager.CheckPasswordAsync(identityUser, requestDto.Password);
+
+                if (checkPasswordResult)
+                {
+                    var roles = await userManager.GetRolesAsync(identityUser);
+
+                    //Create a Token and Response
+                    var jwtToken = tokenRepository.CreateJwtToken(identityUser, roles.ToList());
+
+                    var response = new LoginResponseDto
+                    {
+                        Email = requestDto.Email,
+                        Roles = roles.ToList(),
+                        Token = jwtToken
+                    };
+                    return Ok(response);
+                }
+                
+            }
+            ModelState.AddModelError("InvalidPassword", "Email or Password Incorrect");
             return ValidationProblem(ModelState);
         }
     }

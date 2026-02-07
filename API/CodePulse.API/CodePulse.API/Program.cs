@@ -37,6 +37,7 @@ namespace CodePulse.API
 
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+            builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
             //Injecting Identity core
             builder.Services.AddIdentityCore<IdentityUser>()
