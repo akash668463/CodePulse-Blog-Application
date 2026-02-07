@@ -91,7 +91,8 @@ namespace CodePulse.API
             {
                 options.AllowAnyHeader();
                 options.AllowAnyMethod();
-                options.AllowAnyOrigin();
+                options.WithOrigins("http://localhost:4200");
+                options.AllowCredentials();
             });
 
             app.UseAuthentication();

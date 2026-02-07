@@ -89,8 +89,16 @@ namespace CodePulse.API.Controllers
                     {
                         Email = requestDto.Email,
                         Roles = roles.ToList(),
-                        Token = jwtToken
                     };
+
+                    Response.Cookies.Append("access_token", jwtToken, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.Lax,
+                        Expires = DateTime.UtcNow.AddHours(1)
+                    });
+
                     return Ok(response);
                 }
                 
