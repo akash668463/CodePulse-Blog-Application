@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../services/auth-service';
 
 @Component({
   selector: 'app-login',
@@ -8,6 +9,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
   styleUrl: './login.css',
 })
 export class Login {
+
+  authService = inject(AuthService);
 
   loginFormGroup = new FormGroup({
     email: new FormControl<string>('',{
@@ -29,6 +32,14 @@ get passwordFormControl(){
 
   onSubmit(){
     const formRawValue = this.loginFormGroup.getRawValue();
-    console.log(formRawValue);
+    this.authService.login(formRawValue.email, formRawValue.password)
+    .subscribe({
+      next: (response) => {
+        console.log(response);
+      },
+      error: () => {
+        console.error('something went wrong')
+      }
+    });
   }
 }
