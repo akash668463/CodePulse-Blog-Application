@@ -9,7 +9,7 @@ namespace CodePulse.API.Data
         {
 
         }
-        //the type of DbSet is the model class and DbSet class represents a collection of entities from a particular type
+        //Convention based mapping will automatically create a table with the same name as the model class and columns based on the properties of the model class
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Category> Categories { get; set; }
     }

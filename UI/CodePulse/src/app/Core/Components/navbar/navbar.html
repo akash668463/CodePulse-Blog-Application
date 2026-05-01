@@ -21,7 +21,11 @@
       </ul>
 
       <div class="d-flex">
+        @if(authService.user()){
+          <span>{{authService.user()?.email}}</span>
+        }@else {
           <a [routerLink]="['/login']" class="btn btn-primary">Login</a>
+        }
       </div>
     </div>
   </div>

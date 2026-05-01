@@ -73,6 +73,18 @@ namespace CodePulse.API
                         IssuerSigningKey = new SymmetricSecurityKey(
                             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
+                    //to extract access token from the cookie
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            if (context.Request.Cookies.TryGetValue("access_token", out var token))
+                            {
+                                context.Token = token;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             var app = builder.Build();
@@ -91,7 +103,7 @@ namespace CodePulse.API
             {
                 options.AllowAnyHeader();
                 options.AllowAnyMethod();
-                options.WithOrigins("http://localhost:4200");
+                options.WithOrigins("https://localhost:4200");
                 options.AllowCredentials();
             });
 

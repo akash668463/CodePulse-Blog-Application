@@ -13,6 +13,7 @@ namespace CodePulse.API.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            //Fluent API mapping to seed roles and admin user because it provides better control over relationships and constraints and table configuration. 
             base.OnModelCreating(builder);
 
             var readerRoleId = "b74ddd14-6340-4840-95c2-db12554843e5";
